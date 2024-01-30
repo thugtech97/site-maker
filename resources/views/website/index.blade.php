@@ -58,16 +58,18 @@
 
                         <div class="bd-highlight mg-t-10 mg-r-5">
                             <form class="form-inline" id="searchForm" style="font-size:12px;">
-                                    <div class="mg-b-10 mg-r-5">
-                                        <input name="search" type="search" id="search" class="form-control" style="font-size:12px;width: 150px;"  placeholder="Search Wesbite Name">
-                                    </div>
-                                    <div class="mg-b-10">
-                                        <button class="btn btn-sm btn-info" type="button" id="btnSearch">Search</button>
-                                        <a class="btn btn-sm btn-success" href="">Reset</a>
-                                    </div>
+                                <div class="mg-b-10 mg-r-5">
+                                    <input name="search" type="search" id="search" class="form-control" style="font-size:12px;width: 150px;"  placeholder="Search Website Name">
+                                </div>
+                                <div class="mg-b-10">
+                                    <button class="btn btn-sm btn-info" type="button" id="btnSearch">Search</button>
+                                    <a class="btn btn-sm btn-success" href="">Reset</a>
+                                </div>
                             </form>
                         </div>
-
+                        <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
+                            <span class="text-success" style="border-radius: 10px;">{{ $availableSite }} out of {{ $maxSite }} sites created</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,24 +6,19 @@
 
 @section('pagecss')
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
-    {{-- <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script> --}}
-
-    <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-            rel="stylesheet"
-        />
-    {{-- <link rel="stylesheet" href="{{ asset('lib/grapesjs/toastr.min.css') }}" /> --}}
-    <link rel="stylesheet" href="{{ asset('lib/custom-grapesjs/grapesjs/dist/css/grapes.min.css') }}" />
-    {{-- <link rel="stylesheet" href="{{ asset('lib/custom-grapesjs/assets/css/bamburgh.css') }}" /> --}}
-    <link rel="stylesheet" href="{{ asset('lib/custom-grapesjs/assets/css/custom-grapesjs.css') }}" />
-    <link rel="stylesheet" href="{{ asset('lib/custom-grapesjs/linearicon/css/linearicons.min.css') }}" />
-    {{-- <link rel="stylesheet" href="{{ asset('lib/grapesjs/grapick.min.css') }}" /> --}}
-    {{-- <link rel="stylesheet" href="{{ asset('lib/grapesjs/grapesjs-preset-webpage.min.css') }}" /> --}}
-    <link rel="stylesheet" href="{{ asset('lib/grapesjs/tooltip.css') }}" />
-    <link rel="stylesheet" href="{{ asset('lib/grapesjs/grapesjs-plugin-filestack.css') }}" />
-    <link rel="stylesheet" href="{{ asset('lib/grapesjs/tui-color-picker.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('lib/grapesjs/tui-image-editor.min.css') }}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <style>
+        .theme-image {
+            max-width: 75vh;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid black;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 @endsection
+
 
 @section('content')
 
@@ -97,6 +92,25 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label class="d-block">Themes *</label>
+                    <div class="d-flex flex-column flex-md-row mt-4">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="theme1" class="form-check-input" value="theme1" required>
+                            <label for="theme1" class="form-check-label">
+                                <img src="{{ asset('storage/themes/theme1.png') }}" alt="Theme 1" class="theme-image">
+                                <p class="text-center mt-2">Theme 1</p>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="theme2" class="form-check-input" value="theme2" required>
+                            <label for="theme2" class="form-check-label">
+                                <img src="{{ asset('storage/themes/theme2.png') }}" alt="Theme 2" class="theme-image">
+                                <p class="text-center mt-2">Theme 2</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-12 mg-t-30">
                 <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save</button>
@@ -111,12 +125,9 @@
     <script>
        
     </script>
-    <script src="{{ asset('lib/custom-grapesjs/assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('lib/bselect/dist/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('lib/bselect/dist/js/i18n/defaults-en_US.js') }}"></script>
     <script src="{{ asset('lib/owl.carousel/owl.carousel.js') }}"></script>
-    <script src="{{ asset('js/file-upload-validation.js') }}"></script>
-    <script src="{{ asset('vendor/laravel-filemanager/js/stand-alone-button-2.js') }}"></script>
 
 @endsection
 

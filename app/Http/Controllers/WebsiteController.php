@@ -7,6 +7,8 @@ use App\Models\Website;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\ListingHelper;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Requests\StoreWebsiteRequest;
 use App\Http\Requests\UpdateWebsiteRequest;
@@ -16,11 +18,20 @@ class WebsiteController extends Controller {
     /**
      * Display a listing of the resource.
      */
+    private $maxSite = 2;
+    private $destinationDirectory = 'D:/wsi-sites';
     public function index()
     {
         $websites = Website::orderBy('created_at', 'desc')->paginate(10);
+        $availableSite = 0;
 
-        return view('website.index', compact('websites'));
+        for($i = 1; $i <= $this->maxSite; $i++){
+            if(!File::exists($this->destinationDirectory.'/wsi-standards'.$i)) {
+                $availableSite++;
+            }
+        }
+
+        return view('website.index', compact('websites', 'availableSite'))->with('maxSite', $this->maxSite);
     }
 
     /**
@@ -106,13 +117,51 @@ class WebsiteController extends Controller {
         }
     }
 
-    /*
-    public function build(Request $request){
-
-        return redirect()->route('website.index')->with('success', 'Site created successfully.');
-    }
-    */
     
+    public function build(Request $request){
+        try{
+            $website = Website::findOrFail($request->website);
+            $companyName = $website->company;
+            $slug = Str::slug($website->website_name);
+            ini_set('max_execution_time', 600);
+
+            $siteIndex = 0;
+            for($i = 1; $i <= $this->maxSite; $i++){
+                if(File::exists($this->destinationDirectory.'/wsi-standards'.$i)) {
+                    $siteIndex = $i;
+                    break;
+                }
+            }
+            if($siteIndex == 0){
+                return redirect()->route('website.index')->with('error', 'No Site Available.');
+            }
+
+            $oldPath    = $this->destinationDirectory.'/wsi-standards'.$siteIndex;
+            $newProject = $this->destinationDirectory.'/'.$slug;
+
+            File::move($oldPath, $newProject);
+
+            $sourceAsset = $this->destinationDirectory.'/'.$website->theme.'/assets';
+            $targetAsset = $this->destinationDirectory.'/'.$slug.'/public/theme';
+            File::copyDirectory($sourceAsset, $targetAsset);
+
+            $sourceView = $this->destinationDirectory.'/'.$website->theme.'/views';
+            $targetView = $this->destinationDirectory.'/'.$slug.'/resources/views/theme';
+            File::copyDirectory($sourceView, $targetView);
+
+            DB::statement("CREATE DATABASE IF NOT EXISTS `$slug`");
+            $this->configureDatabaseInEnvFile($slug, $this->destinationDirectory.'/'.$slug);
+            $this->changeSeederValues('company_name', $companyName, $this->destinationDirectory.'/'.$slug);
+            $this->changeSeederValues('website_name', $companyName, $this->destinationDirectory.'/'.$slug);
+            
+            return redirect()->route('website.index')->with('success', 'Site created successfully.');
+
+        }catch(Exception $e){
+            return redirect()->route('website.index')->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+    
+    /*
     public function build(Request $request)
     {
         try {
@@ -136,7 +185,7 @@ class WebsiteController extends Controller {
                 
                 // Concatenate commands using && and execute them
                 exec('start cmd /k ' . implode(' && ', $commands));
-                */
+
                 return redirect()->route('website.index')->with('success', 'Site created successfully.');
             } else {
                 return redirect()->route('website.index')->with('error', 'Error: Build failed');
@@ -144,6 +193,41 @@ class WebsiteController extends Controller {
         } catch (ProcessFailedException $e) {
             return redirect()->route('website.index')->with('error', 'Error: ' . $e->getMessage());
         }
+    }
+    */
+
+    private function configureDatabaseInEnvFile($databaseName, $destinationDirectory)
+    {
+        $envFilePath = $destinationDirectory . '/.env';
+        $currentEnvContent = file_get_contents($envFilePath);
+        $newDatabaseConfig = "DB_DATABASE=$databaseName";
+
+        $updatedEnvContent = preg_replace(
+            '/(DB_DATABASE=)(.*)/',
+            $newDatabaseConfig,
+            $currentEnvContent
+        );
+
+        file_put_contents($envFilePath, $updatedEnvContent);
+    }
+
+    private function changeSeederValues($key, $companyName, $destinationDirectory) {
+        $seederPath = $destinationDirectory . '/database/seeders/SettingSeeder.php';
+        $escapedCompanyName = preg_quote($companyName, '/');
+    
+        $currentSeeder = file_get_contents($seederPath);
+        $newSeeder = "'$key' => '$escapedCompanyName',";
+        $updatedSeederContent = preg_replace(
+            "/('$key' =>\s*')([^']+)(.*)/",
+            $newSeeder,
+            $currentSeeder
+        );
+    
+        if ($updatedSeederContent === null) {
+            throw new \Exception("Failed to update $key in the seeder file.");
+        }
+    
+        file_put_contents($seederPath, $updatedSeederContent);
     }
     
 }

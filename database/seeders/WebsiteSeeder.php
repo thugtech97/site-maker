@@ -25,6 +25,7 @@ class WebsiteSeeder extends Seeder
                 'website_name' => $faker->company,
                 'project_type' => $faker->word,
                 'url' => $faker->url,
+                'theme' => $faker->randomElement(['theme1', 'theme2']), // Seed the enum column
                 //'user_id' => User::inRandomOrder()->first()->id,
             ])->modules()->attach(Module::inRandomOrder()->limit(rand(1, 11))->pluck('id'));
         }

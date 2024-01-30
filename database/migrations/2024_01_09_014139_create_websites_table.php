@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('website_name')->nullable();
             $table->string('project_type')->nullable();
             $table->string('url')->nullable();
+            $table->string('db')->nullable();
+
+            $table->enum('theme', ['theme1', 'theme2'])->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
 
