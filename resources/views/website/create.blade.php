@@ -94,6 +94,7 @@
                 </div>
                 <div class="form-group">
                     <label class="d-block">Themes *</label>
+
                     <div class="d-flex flex-column flex-md-row mt-4">
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="theme1" class="form-check-input" value="theme1" required>
@@ -110,6 +111,24 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="d-flex flex-column flex-md-row mt-4">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="law_theme" class="form-check-input" value="law_theme" required>
+                            <label for="law_theme" class="form-check-label">
+                                <img src="{{ asset('storage/themes/law-firm.jpg') }}" alt="Law Firm" class="theme-image">
+                                <p class="text-center mt-2">Law Firm</p>
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="kindergarten_theme" class="form-check-input" value="kindergarten_theme" required>
+                            <label for="kindergarten_theme" class="form-check-label">
+                                <img src="{{ asset('storage/themes/kindergarten.jpg') }}" alt="Kindergarten" class="theme-image">
+                                <p class="text-center mt-2">Law Firm</p>
+                            </label>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
             <div class="col-lg-12 mg-t-30">

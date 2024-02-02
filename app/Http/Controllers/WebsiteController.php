@@ -18,8 +18,8 @@ class WebsiteController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    private $maxSite = 2;
-    private $destinationDirectory = 'D:/wsi-sites';
+    private $maxSite = 5;
+    private $destinationDirectory = 'E:/wsi-sites';
     public function index()
     {
         $websites = Website::orderBy('created_at', 'desc')->paginate(10);
