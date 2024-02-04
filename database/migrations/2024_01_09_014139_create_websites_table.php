@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('websites', function (Blueprint $table) {
             $table->id();
             $table->string('company')->nullable();
+            $table->string('logo')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('website_name')->nullable();
             $table->string('project_type')->nullable();
             $table->string('url')->nullable();
-            $table->string('db')->nullable();
-
             $table->enum('theme', ['theme1', 'theme2', 'law_theme'])->nullable();
+            $table->string('status')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
 

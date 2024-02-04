@@ -14,5 +14,9 @@
         </ul>
     </li>
 
+    <li class="nav-item @if (request()->routeIs('settings*')) active show @endif">
+        <a href="{{ route('settings.index') }}" class="nav-link"><i data-feather="settings"></i> <span>Settings</span></a>
+    </li>
+
 
 </ul>

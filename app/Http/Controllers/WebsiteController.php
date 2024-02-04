@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Module;
 use App\Models\Website;
+use App\Helpers\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\ListingHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreWebsiteRequest;
 use App\Http\Requests\UpdateWebsiteRequest;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -18,8 +20,14 @@ class WebsiteController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    private $maxSite = 5;
-    private $destinationDirectory = 'E:/wsi-sites';
+    private $maxSite;
+    private $destinationDirectory;
+
+    public function __construct(){
+        $this->maxSite = Setting::getMaxSite();
+        $this->destinationDirectory = Setting::getDestinationDirectory();
+    }
+
     public function index()
     {
         $websites = Website::orderBy('created_at', 'desc')->paginate(10);
@@ -49,8 +57,14 @@ class WebsiteController extends Controller {
     public function store(StoreWebsiteRequest $request)
     {
         try{
-            $website = Website::create($request->all());
+            $websiteData = $request->except('logo');
+
+            $website = Website::create($websiteData);
+            $logoFile = $request->file('logo');
+            $logoFileName = $logoFile->store('logos/'.$website->id, 'public');
+            $website->update(['logo' => $logoFileName]);
             $website->modules()->sync($request->module_id);
+
             return redirect()->route('website.index')->with('success', 'New website has been added.');
         }catch(Exception $e){
             return redirect()->route('website.index')->with('error', $e->getMessage());
@@ -141,18 +155,24 @@ class WebsiteController extends Controller {
 
             File::move($oldPath, $newProject);
 
-            $sourceAsset = $this->destinationDirectory.'/'.$website->theme.'/assets';
+            $sourceAsset = $this->destinationDirectory.'/themes/'.$website->theme.'/assets';
             $targetAsset = $this->destinationDirectory.'/'.$slug.'/public/theme';
             File::copyDirectory($sourceAsset, $targetAsset);
 
-            $sourceView = $this->destinationDirectory.'/'.$website->theme.'/views';
+            $sourceView = $this->destinationDirectory.'/themes/'.$website->theme.'/views';
             $targetView = $this->destinationDirectory.'/'.$slug.'/resources/views/theme';
             File::copyDirectory($sourceView, $targetView);
+
+            $sourceLogo = storage_path('app/public/'.$website->logo);
+            $destinationLogo = $this->destinationDirectory.'/'.$slug.'/public/images/site-logo.png';
+            File::copy($sourceLogo, $destinationLogo);
 
             DB::statement("CREATE DATABASE IF NOT EXISTS `$slug`");
             $this->configureDatabaseInEnvFile($slug, $this->destinationDirectory.'/'.$slug);
             $this->changeSeederValues('company_name', $companyName, $this->destinationDirectory.'/'.$slug);
             $this->changeSeederValues('website_name', $companyName, $this->destinationDirectory.'/'.$slug);
+
+            $website->update(["status" => "Built"]);
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
 

@@ -81,6 +81,7 @@
                     <table class="table mg-b-0 table-light table-hover" id="table_sales">
                         <thead>
                         <tr>
+                            <th style=""></th>
                             <th style="width: 15%;">Company</th>
                             <th style="width: 15%;">Website Name</th>
                             <th class="d-none" style="width: 10%;">Project Type</th>
@@ -97,19 +98,26 @@
                                     $modules = implode(', ', array_column(json_decode($website->modules, true), 'name'));
                                 @endphp
                                 <tr class="pd-20">
+                                    <td><img height="100" width="100" src="{{ asset('storage/'.$website->logo) }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'"></td>
                                     <td>{{ $website->company }}</td>
                                     <td>{{ $website->website_name }}</td>
                                     <td class="d-none">{{ $website->project_type }}</td>
                                     <td class="d-none">{{ $modules }}</td>
                                     <td>{{ $website->contact_person }}</td>
-                                    <td>-</td>
+                                    <td>
+                                        @if($website->status == "")
+                                            <span class="text-warning text-uppercase"><i>new site</i></span>
+                                        @else
+                                            <span class="text-success text-uppercase"><i>{{ $website->status }}</i></span>
+                                        @endif
+                                    </td>
                                     <td></td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" href="{{ route('website.show', $website->id) }}" title="View"><i data-feather="eye"></i></a>
                                             <a class="nav-link" href="{{ route('website.edit', $website->id) }}" title="Edit"><i data-feather="edit"></i></a>
-                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_website({{$website->id}},'{{$website->website_name}}')" title="Delete"><i data-feather="trash-2"></i></a>
-                                            <a class="nav-link" href="javascript:void(0)" onclick="build_site({{$website->id}},'{{$website->website_name}}')" title="Build site"><i data-feather="layers"></i></a>
+                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_website({{$website->id}})" title="Delete"><i data-feather="trash-2"></i></a>
+                                            <a class="nav-link @php echo ($website->status != "") ? 'd-none' : ''; @endphp" href="javascript:void(0)" onclick="build_site({{$website->id}})" title="Build site"><i data-feather="layers"></i></a>
                                         </nav>
                                     </td>
                                 </tr>
@@ -188,14 +196,14 @@
             $('#posting_form').submit();
         }
 
-        function delete_website(id,website){
+        function delete_website(id){
             $('#prompt-delete').modal('show');
             $('#btnDelete').on('click', function() {
                 post_form("{{route('website.delete')}}",'',id);
             });
         }
 
-        function build_site(id,website){
+        function build_site(id){
             post_form("{{route('website.build')}}",'',id);
         }
     </script>

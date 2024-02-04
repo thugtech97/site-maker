@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(ModuleSeeder::class);
         $this->call(WebsiteSeeder::class);
+        $this->call(SettingsSeeder::class);
     }
 }

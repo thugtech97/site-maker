@@ -7,14 +7,19 @@
 @section('pagecss')
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-    <style>
+    <style lang="scss">
         .theme-image {
-            max-width: 75vh;
+            max-width: 65vh;
             display: block;
             margin: 0 auto;
             border: 1px solid black;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        .selected-theme {
+            box-shadow: 10px 10px 10px rgba(0, 123, 255, 0.5);
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
     </style>
 @endsection
@@ -34,7 +39,7 @@
             <h4 class="mg-b-0 tx-spacing--1">Create a site</h4>
         </div>
     </div>
-    <form method="post" action="{{ route('website.store') }}">
+    <form method="post" action="{{ route('website.store') }}" enctype="multipart/form-data">
         <div class="row row-sm">
             <div class="col-lg-6">
                 @csrf
@@ -44,6 +49,9 @@
                     @error('company')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
+                    <label class="d-block">Logo *</label>
+                    <input type="file" class="form-control-file" name="logo" id="companylogo" accept="image/*" required>
+                    <img id="previewLogo" style="display: none; max-width: 20%; margin-top: 10px;" alt="Preview Logo">
                 </div>
                 <div class="form-group">
                     <label class="d-block">Website Name *</label>
@@ -63,7 +71,9 @@
                     <label class="d-block">Modules *</label>
                     <select id="module_id" class="selectpicker mg-b-5" name="module_id[]" multiple data-style="btn btn-outline-light btn-md btn-block tx-left" data-width="100%" required>
                         @forelse($modules as $module)
-                            <option value="{{$module->id}}">{{strtoupper($module->name)}}</option>
+                            <option value="{{ $module->id }}" {{ in_array($module->id, [1, 2, 3]) ? 'selected' : '' }}>
+                                {{strtoupper($module->name)}}
+                            </option>
                         @empty
                         @endforelse
                     </select>
@@ -95,36 +105,35 @@
                 <div class="form-group">
                     <label class="d-block">Themes *</label>
 
-                    <div class="d-flex flex-column flex-md-row mt-4">
+                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="theme1" class="form-check-input" value="theme1" required>
+                            <input type="radio" name="theme" id="theme1" class="form-check-input theme-selector d-none" value="theme1" data-theme="Theme 1" required>
                             <label for="theme1" class="form-check-label">
-                                <img src="{{ asset('storage/themes/theme1.png') }}" alt="Theme 1" class="theme-image">
+                                <img src="{{ asset('img/themes/theme1.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="Theme 1" class="theme-image">
                                 <p class="text-center mt-2">Theme 1</p>
                             </label>
-                        </div>
+                        </div>&nbsp;&nbsp;&nbsp;
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="theme2" class="form-check-input" value="theme2" required>
+                            <input type="radio" name="theme" id="theme2" class="form-check-input theme-selector d-none" value="theme2" data-theme="Theme 2" required>
                             <label for="theme2" class="form-check-label">
-                                <img src="{{ asset('storage/themes/theme2.png') }}" alt="Theme 2" class="theme-image">
+                                <img src="{{ asset('img/themes/theme2.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="Theme 2" class="theme-image">
                                 <p class="text-center mt-2">Theme 2</p>
                             </label>
                         </div>
                     </div>
-
-                    <div class="d-flex flex-column flex-md-row mt-4">
+                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="law_theme" class="form-check-input" value="law_theme" required>
+                            <input type="radio" name="theme" id="law_theme" class="form-check-input theme-selector d-none" value="law_theme" required>
                             <label for="law_theme" class="form-check-label">
-                                <img src="{{ asset('storage/themes/law-firm.jpg') }}" alt="Law Firm" class="theme-image">
+                                <img src="{{ asset('img/themes/law-firm.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="Law Firm" class="theme-image">
                                 <p class="text-center mt-2">Law Firm</p>
                             </label>
-                        </div>
+                        </div>&nbsp;&nbsp;&nbsp;
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="kindergarten_theme" class="form-check-input" value="kindergarten_theme" required>
+                            <input type="radio" name="theme" id="kindergarten_theme" class="form-check-input theme-selector d-none" value="kindergarten_theme" required>
                             <label for="kindergarten_theme" class="form-check-label">
-                                <img src="{{ asset('storage/themes/kindergarten.jpg') }}" alt="Kindergarten" class="theme-image">
-                                <p class="text-center mt-2">Law Firm</p>
+                                <img src="{{ asset('img/themes/kindergarten.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="Kindergarten" class="theme-image">
+                                <p class="text-center mt-2">Kindergarten</p>
                             </label>
                         </div>
                     </div>
@@ -152,6 +161,30 @@
 
 @section('customjs')
     <script>
+        $(document).ready(function () {
+        
+        $('.theme-selector').on('click', function () {
+            $('.theme-selector').each(function () {
+                $(this).parent().removeClass('selected-theme');
+            });
+            $(this).parent().addClass('selected-theme');
+        });
 
+        $('#companylogo').change(function () {
+            var input = this;
+            var logoPreview = $('#previewLogo');
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    logoPreview.attr('src', e.target.result);
+                    logoPreview.css('display', 'block');
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+    });
     </script>
 @endsection
