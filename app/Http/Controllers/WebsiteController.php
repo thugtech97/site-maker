@@ -153,20 +153,25 @@ class WebsiteController extends Controller {
             $oldPath    = $this->destinationDirectory.'/wsi-standards'.$siteIndex;
             $newProject = $this->destinationDirectory.'/'.$slug;
 
+            //rename the directory to a new project
             File::move($oldPath, $newProject);
 
+            //transfer theme assets
             $sourceAsset = $this->destinationDirectory.'/themes/'.$website->theme.'/assets';
             $targetAsset = $this->destinationDirectory.'/'.$slug.'/public/theme';
             File::copyDirectory($sourceAsset, $targetAsset);
 
+            //transfer theme views
             $sourceView = $this->destinationDirectory.'/themes/'.$website->theme.'/views';
             $targetView = $this->destinationDirectory.'/'.$slug.'/resources/views/theme';
             File::copyDirectory($sourceView, $targetView);
 
+            //transfer logo
             $sourceLogo = storage_path('app/public/'.$website->logo);
-            $destinationLogo = $this->destinationDirectory.'/'.$slug.'/public/images/site-logo.png';
+            $destinationLogo = $this->destinationDirectory.'/'.$slug.'/public/storage/logos/site-logo.png';
             File::copy($sourceLogo, $destinationLogo);
 
+            //create db & setting up environment and seeders
             DB::statement("CREATE DATABASE IF NOT EXISTS `$slug`");
             $this->configureDatabaseInEnvFile($slug, $this->destinationDirectory.'/'.$slug);
             $this->changeSeederValues('company_name', $companyName, $this->destinationDirectory.'/'.$slug);
