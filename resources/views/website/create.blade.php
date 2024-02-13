@@ -121,6 +121,7 @@
                             </label>
                         </div>
                     </div>
+
                     <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="law_theme" class="form-check-input theme-selector d-none" value="law_theme" required>
@@ -130,14 +131,48 @@
                             </label>
                         </div>&nbsp;&nbsp;&nbsp;
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="kindergarten_theme" class="form-check-input theme-selector d-none" value="kindergarten_theme" required>
-                            <label for="kindergarten_theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/kindergarten.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="Kindergarten" class="theme-image">
-                                <p class="text-center mt-2">Kindergarten</p>
+                            <input type="radio" name="theme" id="burger-theme" class="form-check-input theme-selector d-none" value="burger-theme" required>
+                            <label for="burger-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/burger_theme.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="burger_theme" class="theme-image">
+                                <p class="text-center mt-2">Burger Theme</p>
                             </label>
                         </div>
                     </div>
-                    
+
+                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="dark-theme" class="form-check-input theme-selector d-none" value="dark-theme" required>
+                            <label for="dark-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/law-firm.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Dark Theme</p>
+                            </label>
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="finance-theme" class="form-check-input theme-selector d-none" value="finance-theme" required>
+                            <label for="finance-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/burger_theme.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Finance Theme</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="yoga-theme" class="form-check-input theme-selector d-none" value="yoga-theme" required>
+                            <label for="yoga-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/law-firm.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Yoga Theme</p>
+                            </label>
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="seo-demo-theme" class="form-check-input theme-selector d-none" value="seo-demo-theme" required>
+                            <label for="seo-demo-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/burger_theme.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">SEO Demo Theme</p>
+                            </label>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="col-lg-12 mg-t-30">
