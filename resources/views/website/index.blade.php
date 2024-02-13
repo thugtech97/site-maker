@@ -10,13 +10,50 @@
             padding: 10px;
             font-size: 13px;
         }
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; 
+        }
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -60px; 
+            margin-left: -60px; 
+            z-index: 9999; 
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .hide-loader {
+            display: none;
+        }
     </style>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <link href="{{ asset('lib/filter-multiselect/filter-multiselect.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
+    <div class="loader-container" id="loader-container">
+        <!-- Loader -->
+        <div class="loader" id="loader"></div>
+    </div>
+
 
     <div class="container pd-x-0">
         <div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
@@ -81,7 +118,7 @@
                     <table class="table mg-b-0 table-light table-hover" id="table_sales">
                         <thead>
                         <tr>
-                            <th style=""></th>
+                            <th></th>
                             <th style="width: 15%;">Company</th>
                             <th style="width: 15%;">Website Name</th>
                             <th class="d-none" style="width: 10%;">Project Type</th>
@@ -189,6 +226,10 @@
 @endsection
 @section('customjs')
     <script>
+        $(document).ready(function() {
+            $('#loader-container').addClass("hide-loader");
+        });
+
         function post_form(url,status,website){
             $('#posting_form').attr('action',url);
             $('#website').val(website);
@@ -204,8 +245,18 @@
         }
 
         function build_site(id){
-            post_form("{{route('website.build')}}",'',id);
+
+            $('#loader-container').removeClass("hide-loader");
+
+            post_form("{{route('website.build')}}",'',id)
+            .then(response => {
+                $('#loader-container').addClass("hide-loader");
+            })
+            .catch(error => {
+                $('#loader-container').addClass("hide-loader");
+            });
         }
+
     </script>
 @endsection
 

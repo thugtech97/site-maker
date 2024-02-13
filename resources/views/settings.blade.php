@@ -82,7 +82,8 @@
             $("#path_remarks").html("");
             $("#save_button").prop('disabled', false);
 
-            var regex = /^[A-Za-z]:\/[\\a-zA-Z0-9_-]+(\/[\\a-zA-Z0-9_-]+)*$/;
+            var regex = /^[A-Za-z]:\/[\\a-zA-Z0-9_.-]+(\/[\\a-zA-Z0-9_.-]+)*$/;
+
             var isValidPath = regex.test(selectedPath);
 
             if (!isValidPath) {

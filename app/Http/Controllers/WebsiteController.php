@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Module;
 use App\Models\Website;
+use App\Models\Submodule;
 use App\Helpers\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -14,7 +15,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreWebsiteRequest;
 use App\Http\Requests\UpdateWebsiteRequest;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class WebsiteController extends Controller {
     /**
@@ -132,20 +132,32 @@ class WebsiteController extends Controller {
     }
 
     
-    public function build(Request $request){
+    public function build(Request $request)
+    {
         try{
+
             $website = Website::findOrFail($request->website);
+            $websiteModules = $website->modules;     
+            $submodules = Submodule::whereIn('module_id', $websiteModules->pluck('id'))
+                ->join('modules', 'submodules.module_id', '=', 'modules.id')
+                ->select('submodules.*', 'modules.name as module')
+                ->get();
+                
+            // return $submodules;
             $companyName = $website->company;
             $slug = Str::slug($website->website_name);
+
             ini_set('max_execution_time', 600);
 
             $siteIndex = 0;
+            
             for($i = 1; $i <= $this->maxSite; $i++){
                 if(File::exists($this->destinationDirectory.'/wsi-standards'.$i)) {
                     $siteIndex = $i;
                     break;
                 }
             }
+
             if($siteIndex == 0){
                 return redirect()->route('website.index')->with('error', 'No Site Available.');
             }
@@ -158,25 +170,26 @@ class WebsiteController extends Controller {
 
             //transfer theme assets
             $sourceAsset = $this->destinationDirectory.'/themes/'.$website->theme.'/assets';
-            $targetAsset = $this->destinationDirectory.'/'.$slug.'/public/theme';
+            $targetAsset = $newProject.'/public/theme';
             File::copyDirectory($sourceAsset, $targetAsset);
 
             //transfer theme views
             $sourceView = $this->destinationDirectory.'/themes/'.$website->theme.'/views';
-            $targetView = $this->destinationDirectory.'/'.$slug.'/resources/views/theme';
+            $targetView = $newProject.'/resources/views/theme';
             File::copyDirectory($sourceView, $targetView);
 
             //transfer logo
             $sourceLogo = storage_path('app/public/'.$website->logo);
-            $destinationLogo = $this->destinationDirectory.'/'.$slug.'/public/storage/logos/site-logo.png';
+            $destinationLogo = $newProject.'/public/storage/logos/site-logo.png';
             File::copy($sourceLogo, $destinationLogo);
 
             //create db & setting up environment and seeders
             DB::statement("CREATE DATABASE IF NOT EXISTS `$slug`");
-            $this->configureDatabaseInEnvFile($slug, $this->destinationDirectory.'/'.$slug);
-            $this->changeSeederValues('company_name', $companyName, $this->destinationDirectory.'/'.$slug);
-            $this->changeSeederValues('website_name', $companyName, $this->destinationDirectory.'/'.$slug);
-
+            $this->configureDatabaseInEnvFile($slug, $newProject);
+            $this->changeSeederValues('company_name', $companyName, $newProject);
+            $this->changeSeederValues('website_name', $companyName, $newProject);
+            $this->updatePermissionsSeeder($submodules, $newProject);
+        
             $website->update(["status" => "Built"]);
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
@@ -185,41 +198,6 @@ class WebsiteController extends Controller {
             return redirect()->route('website.index')->with('error', 'Error: ' . $e->getMessage());
         }
     }
-    
-    /*
-    public function build(Request $request)
-    {
-        try {
-            $website = Website::findOrFail($request->website);
-
-            ini_set('max_execution_time', 600);
-            $projectPath = 'C:/laragon/www/wsi/site-maker';
-            $repositoryUrl = "https://github.com/thugtech97/wsi-standards.git";
-
-            $artisanScript = $projectPath . DIRECTORY_SEPARATOR . 'artisan';
-            $gitCloneCommand = sprintf('php %s clone:repository %s %s', $artisanScript, escapeshellarg($repositoryUrl), escapeshellarg($request->website));
-
-            exec('start cmd /c "cd /d ' . $projectPath . ' && ' . $gitCloneCommand . '"', $output, $exitCode);
-
-            if ($exitCode === 0) {
-                /*
-                chdir('D:/wsi-sites/harvey-ltd');
-                $commands = [
-                    'php artisan list',
-                ];
-                
-                // Concatenate commands using && and execute them
-                exec('start cmd /k ' . implode(' && ', $commands));
-
-                return redirect()->route('website.index')->with('success', 'Site created successfully.');
-            } else {
-                return redirect()->route('website.index')->with('error', 'Error: Build failed');
-            }
-        } catch (ProcessFailedException $e) {
-            return redirect()->route('website.index')->with('error', 'Error: ' . $e->getMessage());
-        }
-    }
-    */
 
     private function configureDatabaseInEnvFile($databaseName, $destinationDirectory)
     {
@@ -237,10 +215,10 @@ class WebsiteController extends Controller {
     }
 
     private function changeSeederValues($key, $companyName, $destinationDirectory) {
-        $seederPath = $destinationDirectory . '/database/seeders/SettingSeeder.php';
+        $SettingSeeder = $destinationDirectory . '/database/seeders/SettingSeeder.php';
         $escapedCompanyName = preg_quote($companyName, '/');
     
-        $currentSeeder = file_get_contents($seederPath);
+        $currentSeeder = file_get_contents($SettingSeeder);
         $newSeeder = "'$key' => '$escapedCompanyName',";
         $updatedSeederContent = preg_replace(
             "/('$key' =>\s*')([^']+)(.*)/",
@@ -252,7 +230,44 @@ class WebsiteController extends Controller {
             throw new \Exception("Failed to update $key in the seeder file.");
         }
     
-        file_put_contents($seederPath, $updatedSeederContent);
+        file_put_contents($SettingSeeder, $updatedSeederContent);
     }
+
+    private function updatePermissionsSeeder($websiteModules, $destinationDirectory) {
+        $seederFile = $destinationDirectory . '/database/seeders/PermissionsSeeder.php';
+        $currentSeeder = file_get_contents($seederFile);
+        $websiteModulesArray = $websiteModules->toArray();
     
+        $permissionsArray = array_map(function ($module) {
+            return [
+                'name' => '"' .  $module['name'] . '"',
+                'is_view_page' => 0,
+                'module' => '"' .  $module['module'] . '"',
+                'description' => '""',
+                'routes' => '""',
+                'methods' => '""',
+                'user_id' => 1,
+                'created_at' => 'now()',
+                'updated_at' => 'now()',
+            ];
+        }, $websiteModulesArray);
+    
+        $formattedArray = '['  . PHP_EOL . implode(', ' . PHP_EOL, array_map(function ($permission) {
+            return '            [' . implode(', ', array_map(function ($key, $value) {
+                return '"' . $key . '" => ' . $value;
+            }, array_keys($permission), $permission)) . ']';
+        }, $permissionsArray))  . PHP_EOL . '       ];';
+    
+        $updatedSeederContent = preg_replace(
+            '/\$permissions\s*=\s*\[.*?\];/s',
+            '$permissions = ' . $formattedArray,
+            $currentSeeder
+        );
+    
+        if ($updatedSeederContent === null) {
+            throw new \Exception("Failed to update 'name' in the seeder file.");
+        }
+    
+        file_put_contents($seederFile, $updatedSeederContent);
+    }
 }
