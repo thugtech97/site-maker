@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Module;
 use App\Models\Website;
-use App\Models\Submodule;
 use App\Helpers\Setting;
+use App\Models\Submodule;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\ListingHelper;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
@@ -143,7 +144,7 @@ class WebsiteController extends Controller {
                 ->select('submodules.*', 'modules.name as module')
                 ->get();
                 
-            // return $submodules;
+            //$this->seedPermissions($submodules->toArray());
             $companyName = $website->company;
             $slug = Str::slug($website->website_name);
 
@@ -164,8 +165,6 @@ class WebsiteController extends Controller {
 
             $oldPath    = $this->destinationDirectory.'/wsi-standards'.$siteIndex;
             $newProject = $this->destinationDirectory.'/'.$slug;
-
-            //rename the directory to a new project
             File::move($oldPath, $newProject);
 
             //transfer theme assets
@@ -184,13 +183,22 @@ class WebsiteController extends Controller {
             File::copy($sourceLogo, $destinationLogo);
 
             //create db & setting up environment and seeders
-            DB::statement("CREATE DATABASE IF NOT EXISTS `$slug`");
-            $this->configureDatabaseInEnvFile($slug, $newProject);
+            DB::statement("DROP DATABASE IF EXISTS `wsi-$slug`");
+            DB::statement("CREATE DATABASE `wsi-$slug`");
+
+            DB::statement("USE `wsi-$slug`");
+            $sqlFilePath = public_path('sql/wsi-site.sql');
+            $sql = file_get_contents($sqlFilePath);
+            DB::unprepared($sql);
+            DB::statement("UPDATE settings SET website_name = '$companyName', company_name = '$companyName' WHERE id = 1");
+            $this->seedPermissions($submodules->toArray());
+            
+            $this->configureDatabaseInEnvFile('wsi-'.$slug, $newProject);
             $this->changeSeederValues('company_name', $companyName, $newProject);
             $this->changeSeederValues('website_name', $companyName, $newProject);
             $this->updatePermissionsSeeder($submodules, $newProject);
         
-            $website->update(["status" => "Built"]);
+            //$website->update(["status" => "Built"]);
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
 
@@ -269,5 +277,14 @@ class WebsiteController extends Controller {
         }
     
         file_put_contents($seederFile, $updatedSeederContent);
+    }
+
+    private function seedPermissions($websiteModules){
+        foreach($websiteModules as $module){
+            $name = $module["name"];
+            $moduleName = $module["module"];
+            DB::statement("INSERT INTO permissions (name, module, description, routes, methods, user_id, is_view_page, created_at, updated_at, deleted_at) VALUES
+            ('$name', '$moduleName', '', '', '', 1, 0, now(), now(), NULL)");
+        }
     }
 }

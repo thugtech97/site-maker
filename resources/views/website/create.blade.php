@@ -133,7 +133,7 @@
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="burger-theme" class="form-check-input theme-selector d-none" value="burger-theme" required>
                             <label for="burger-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/burger_theme.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="burger_theme" class="theme-image">
+                                <img src="{{ asset('img/themes/burger-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="burger_theme" class="theme-image">
                                 <p class="text-center mt-2">Burger Theme</p>
                             </label>
                         </div>
@@ -143,7 +143,7 @@
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="dark-theme" class="form-check-input theme-selector d-none" value="dark-theme" required>
                             <label for="dark-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/law-firm.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <img src="{{ asset('img/themes/dark-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
                                 <p class="text-center mt-2">Dark Theme</p>
                             </label>
                         </div>&nbsp;&nbsp;&nbsp;
