@@ -198,6 +198,7 @@ class WebsiteController extends Controller {
             $this->changeSeederValues('website_name', $companyName, $newProject);
             $this->updatePermissionsSeeder($submodules, $newProject);
         
+            DB::statement("USE `wsi-site-maker`");
             $website->update(["status" => "Built"]);
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
