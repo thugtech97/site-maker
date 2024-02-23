@@ -42,6 +42,23 @@ class SubmodulesSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'name' => 'pages.update-default',
+                'module_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'pages.update-customize',
+                'module_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'pages.update-contact-us',
+                'module_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'name' => 'pages.index.advance-search',
                 'module_id' => 2, 
                 'created_at' => now(),
