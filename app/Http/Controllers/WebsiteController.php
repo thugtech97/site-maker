@@ -202,7 +202,7 @@ class WebsiteController extends Controller {
         
             File::moveDirectory($newProject, $this->createdSiteDirectory.'/'.$slug);
             DB::statement("USE `wsi-site-maker`");
-            //$website->update(["status" => "Built"]);
+            $website->update(["status" => "Built"]);
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
 
