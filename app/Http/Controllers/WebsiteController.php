@@ -23,10 +23,12 @@ class WebsiteController extends Controller {
      */
     private $maxSite;
     private $destinationDirectory;
+    private $createdSiteDirectory;
 
     public function __construct(){
         $this->maxSite = Setting::getMaxSite();
         $this->destinationDirectory = Setting::getDestinationDirectory();
+        $this->createdSiteDirectory = $this->destinationDirectory.'/created-sites';
     }
 
     public function index()
@@ -35,7 +37,7 @@ class WebsiteController extends Controller {
         $availableSite = 0;
 
         for($i = 1; $i <= $this->maxSite; $i++){
-            if(!File::exists($this->destinationDirectory.'/wsi-standards'.$i)) {
+            if(!File::exists($this->destinationDirectory.'/vacant-sites/wsi-standards'.$i)) {
                 $availableSite++;
             }
         }
@@ -153,7 +155,7 @@ class WebsiteController extends Controller {
             $siteIndex = 0;
             
             for($i = 1; $i <= $this->maxSite; $i++){
-                if(File::exists($this->destinationDirectory.'/wsi-standards'.$i)) {
+                if(File::exists($this->destinationDirectory.'/vacant-sites/wsi-standards'.$i)) {
                     $siteIndex = $i;
                     break;
                 }
@@ -163,8 +165,8 @@ class WebsiteController extends Controller {
                 return redirect()->route('website.index')->with('error', 'No Site Available.');
             }
 
-            $oldPath    = $this->destinationDirectory.'/wsi-standards'.$siteIndex;
-            $newProject = $this->destinationDirectory.'/'.$slug;
+            $oldPath    = $this->destinationDirectory.'/vacant-sites/wsi-standards'.$siteIndex;
+            $newProject = $this->destinationDirectory.'/vacant-sites/'.$slug;
             File::move($oldPath, $newProject);
 
             //transfer theme assets
@@ -198,14 +200,16 @@ class WebsiteController extends Controller {
             $this->changeSeederValues('website_name', $companyName, $newProject);
             $this->updatePermissionsSeeder($submodules, $newProject);
         
+            File::moveDirectory($newProject, $this->createdSiteDirectory.'/'.$slug);
             DB::statement("USE `wsi-site-maker`");
-            $website->update(["status" => "Built"]);
+            //$website->update(["status" => "Built"]);
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
 
         }catch(Exception $e){
             return redirect()->route('website.index')->with('error', 'Error: ' . $e->getMessage());
         }
+
     }
 
     private function configureDatabaseInEnvFile($databaseName, $destinationDirectory)

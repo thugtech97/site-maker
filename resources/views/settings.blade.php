@@ -47,7 +47,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label class="d-block">Destination Directory (e.g. E:/wsi-sites) *</label>
+                    <label class="d-block">Active Directory (e.g. E:/wsi-sites) *</label>
                     <input type="text" onkeyup="validatePath(this.value)" class="form-control @error('destination_directory') is-invalid @enderror" name="destination_directory" id="destination_directory" value="{{ $settings->destination_directory }}" required >
                     <span class="text-danger small" id="path_remarks"></span>
                     @error('destination_directory')
