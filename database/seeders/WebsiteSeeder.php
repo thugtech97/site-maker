@@ -17,7 +17,7 @@ class WebsiteSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 5) as $index) {
+        foreach (range(1, 3) as $index) {
             Website::create([
                 'company' => $faker->company,
                 'contact_person' => $faker->name,

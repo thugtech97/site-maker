@@ -83,6 +83,12 @@ class SubmodulesSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'name' => 'albums.update',
+                'module_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'name' => 'file-manager.index',
                 'module_id' => 4,
                 'created_at' => now(),
@@ -114,6 +120,18 @@ class SubmodulesSeeder extends Seeder
             ],
             [
                 'name' => 'news.create',
+                'module_id' => 6,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'news.edit',
+                'module_id' => 6,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'news.update',
                 'module_id' => 6,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -216,6 +234,12 @@ class SubmodulesSeeder extends Seeder
             ],
             [
                 'name' => 'careers.edit',
+                'module_id' => 11,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'careers.update',
                 'module_id' => 11,
                 'created_at' => now(),
                 'updated_at' => now(),
