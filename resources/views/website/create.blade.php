@@ -150,7 +150,7 @@
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="finance-theme" class="form-check-input theme-selector d-none" value="finance-theme" required>
                             <label for="finance-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/burger_theme.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <img src="{{ asset('img/themes/finance-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
                                 <p class="text-center mt-2">Finance Theme</p>
                             </label>
                         </div>
@@ -160,7 +160,7 @@
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="yoga-theme" class="form-check-input theme-selector d-none" value="yoga-theme" required>
                             <label for="yoga-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/law-firm.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <img src="{{ asset('img/themes/yoga-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
                                 <p class="text-center mt-2">Yoga Theme</p>
                             </label>
                         </div>&nbsp;&nbsp;&nbsp;

@@ -140,7 +140,7 @@ class WebsiteController extends Controller {
         try{
 
             $website = Website::findOrFail($request->website);
-            $websiteModules = $website->modules;     
+            $websiteModules = $website->modules;
             $submodules = Submodule::whereIn('module_id', $websiteModules->pluck('id'))
                 ->join('modules', 'submodules.module_id', '=', 'modules.id')
                 ->select('submodules.*', 'modules.name as module')
