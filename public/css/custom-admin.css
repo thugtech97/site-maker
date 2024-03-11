@@ -96,10 +96,10 @@ label {
 .content-body {
     padding: 100px 40px;
 }
-
+/* change logo*/
 .signin-hero {
     height: 100vh;
-    background: #ebf7ff url(../img/WSI-Logo.png) center center no-repeat;
+    background: #ebf7ff url(../images/dev-signin.png) center center no-repeat;
     background-size: 70%;
 }
 

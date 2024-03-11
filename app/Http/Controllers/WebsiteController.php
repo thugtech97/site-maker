@@ -69,7 +69,7 @@ class WebsiteController extends Controller {
             $website->modules()->sync($request->module_id);
 
             return redirect()->route('website.index')->with('success', 'New website has been added.');
-        }catch(Exception $e){
+        }catch(\Exception $e){
             return redirect()->route('website.index')->with('error', $e->getMessage());
         }
     }
@@ -104,7 +104,7 @@ class WebsiteController extends Controller {
             $website->update($request->all());
             $website->modules()->sync($request->module_id);
             return redirect()->route('website.index')->with('success', 'Website info has been updated.');
-        }catch(Exception $e){
+        }catch(\Exception $e){
             return redirect()->route('website.index')->with('error', $e->getMessage());
         }
     }
@@ -118,7 +118,7 @@ class WebsiteController extends Controller {
             $website = Website::findOrFail($id);
             $website->delete();
             return redirect()->route('website.index')->with('success', 'Website record has been deleted.');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('website.index')->with('error', $e->getMessage());
         }
     }
@@ -129,7 +129,7 @@ class WebsiteController extends Controller {
             $website = Website::findOrFail($request->website);
             $website->delete();
             return redirect()->route('website.index')->with('success', 'Website record has been deleted.');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('website.index')->with('error', $e->getMessage());
         }
     }
@@ -148,6 +148,7 @@ class WebsiteController extends Controller {
                 
             //$this->seedPermissions($submodules->toArray());
             $companyName = $website->company;
+            $email = $website->url;
             $slug = Str::slug($website->website_name);
 
             ini_set('max_execution_time', 600);
@@ -193,6 +194,7 @@ class WebsiteController extends Controller {
             $sql = file_get_contents($sqlFilePath);
             DB::unprepared($sql);
             DB::statement("UPDATE settings SET website_name = '$companyName', company_name = '$companyName' WHERE id = 1");
+            DB::statement("UPDATE users SET email = '$email' WHERE id = 1");
             $this->seedPermissions($submodules->toArray());
             
             $this->configureDatabaseInEnvFile('wsi-'.$slug, $newProject);
@@ -206,7 +208,7 @@ class WebsiteController extends Controller {
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
 
-        }catch(Exception $e){
+        }catch(\Exception $e){
             return redirect()->route('website.index')->with('error', 'Error: ' . $e->getMessage());
         }
 

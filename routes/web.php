@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\SettingsController;
 
@@ -14,12 +15,15 @@ use App\Http\Controllers\SettingsController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', [LoginController::class, 'index'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 });
 
-Route::resource('website', WebsiteController::class);
-Route::resource('settings', SettingsController::class);
-Route::post('/website/delete', [WebsiteController::class, 'delete'])->name('website.delete');
-Route::post('/website/build', [WebsiteController::class, 'build'])->name('website.build');
+Route::middleware(['auth'])->group(function () {
+    Route::resource('website', WebsiteController::class);
+    Route::resource('settings', SettingsController::class);
+    Route::post('/website/delete', [WebsiteController::class, 'delete'])->name('website.delete');
+    Route::post('/website/build', [WebsiteController::class, 'build'])->name('website.build');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});

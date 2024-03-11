@@ -13,6 +13,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>WSI - Site Maker</title>
 
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
+
     <!-- vendor css -->
     <link href="{{ asset('lib/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/ionicons/css/ionicons.min.css') }}" rel="stylesheet">

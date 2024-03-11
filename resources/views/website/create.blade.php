@@ -96,8 +96,8 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label class="d-block">Site URL *</label>
-                    <input type="text" class="form-control @error('url') is-invalid @enderror" name="url" id="url" value="{{ old('url') }}" required>
+                    <label class="d-block">Email *</label>
+                    <input type="email" class="form-control @error('url') is-invalid @enderror" name="url" id="url" value="{{ old('url') }}" required>
                     @error('url')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror

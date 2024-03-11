@@ -59,7 +59,7 @@ class SettingsController extends Controller
             $settings->whereId($setting)->update($data);
             
             return redirect()->route('settings.index')->with('success', 'Setting successfully updated.');
-        }catch(Exception $e){
+        }catch(\Exception $e){
             return redirect()->route('settings.index')->with('error', $e->getMessage());
         }
     }

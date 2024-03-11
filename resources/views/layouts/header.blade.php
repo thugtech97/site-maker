@@ -1,4 +1,3 @@
-
 <div class="content-search content-company">
     <h3 class="tx-15 mg-b-0">WSI Site-maker</h3>
 </div>
@@ -15,14 +14,14 @@
 
         <a href="" class="dropdown-item"><i data-feather="edit-3"></i> Account Settings</a>
         <a href="" target="_blank" class="dropdown-item"><i data-feather="help-circle"></i> Help</a>
-        <a href="" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i data-feather="log-out"></i>Log Out</a>
-
-        <form id="logout-form" action="" method="POST" style="display: none;">
+        <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i data-feather="log-out"></i>
+            Log Out
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
-            <input type="hidden" name="roleid" value="">
         </form>
     </div>
     <!-- dropdown-menu -->
 </div>
 <!-- dropdown -->
-
