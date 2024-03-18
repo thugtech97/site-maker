@@ -143,6 +143,12 @@ class SubmodulesSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'name' => 'news.store',
+                'module_id' => 6,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'name' => 'news.edit',
                 'module_id' => 6,
                 'created_at' => now(),

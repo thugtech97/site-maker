@@ -173,6 +173,16 @@
                         </div>
                     </div>
 
+                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="travel-theme" class="form-check-input theme-selector d-none" value="travel-theme" required>
+                            <label for="travel-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/travel-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Travel Theme</p>
+                            </label>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="col-lg-12 mg-t-30">
