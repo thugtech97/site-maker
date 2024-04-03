@@ -149,6 +149,7 @@ class WebsiteController extends Controller {
             //$this->seedPermissions($submodules->toArray());
             $companyName = $website->company;
             $email = $website->url;
+            $mobile_no = $website->contact_number;
             $slug = Str::slug($website->website_name);
 
             ini_set('max_execution_time', 600);
@@ -190,10 +191,10 @@ class WebsiteController extends Controller {
             DB::statement("CREATE DATABASE `wsi-$slug`");
 
             DB::statement("USE `wsi-$slug`");
-            $sqlFilePath = public_path('sql/wsi-site.sql');
-            $sql = file_get_contents($sqlFilePath);
-            DB::unprepared($sql);
-            DB::statement("UPDATE settings SET website_name = '$companyName', company_name = '$companyName' WHERE id = 1");
+            DB::unprepared(file_get_contents(public_path('sql/wsi-site.sql')));
+            DB::unprepared(file_get_contents($this->destinationDirectory.'/themes/'.$website->theme.'/assets/content.sql'));
+
+            DB::statement("UPDATE settings SET website_name = '$companyName', company_name = '$companyName', email = '$email', mobile_no = '$mobile_no' WHERE id = 1");
             DB::statement("UPDATE users SET email = '$email' WHERE id = 1");
             $this->seedPermissions($submodules->toArray());
             

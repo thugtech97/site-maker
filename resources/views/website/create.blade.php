@@ -180,6 +180,13 @@
                                 <img src="{{ asset('img/themes/travel-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
                                 <p class="text-center mt-2">Travel Theme</p>
                             </label>
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="forum-theme" class="form-check-input theme-selector d-none" value="forum-theme" required>
+                            <label for="forum-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/travel_theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Forum Theme</p>
+                            </label>
                         </div>
                     </div>
 
