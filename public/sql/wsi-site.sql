@@ -248,7 +248,9 @@ CREATE TABLE `menu_has_pages` (
 INSERT INTO `menu_has_pages` (`id`, `menu_id`, `parent_id`, `page_id`, `page_order`, `label`, `uri`, `target`, `type`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 0, 1, 1, '', '', '', 'page', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
 (2, 1, 0, 2, 2, '', '', '', 'page', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
-(3, 1, 0, 3, 3, '', '', '', 'page', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL);
+(3, 1, 0, 3, 3, '', '', '', 'page', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
+(4, 1, 0, 5, 4, '', '', '', 'page', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
+(5, 1, 0, 6, 5, '', '', '', 'page', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL);
 
 -- --------------------------------------------------------
 
@@ -404,7 +406,9 @@ INSERT INTO `pages` (`id`, `parent_page_id`, `album_id`, `slug`, `name`, `label`
 (1, 0, 1, 'home', 'Home', 'Home', '', NULL, NULL, 'PUBLISHED', 'default', '', 'Home', 'home', 'Home page', '1', 'home', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
 (2, 0, 2, 'about-us', 'About', 'About', '', NULL, NULL, 'PUBLISHED', 'standard', '', 'About Us', 'About Us', 'About Us page', '1', '', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
 (3, 0, 2, 'contact-us', 'Contact Us', 'Contact Us', '', NULL, NULL, 'PUBLISHED', 'standard', '', 'Contact Us', 'Contact Us', 'Contact Us page', '1', 'contact-us', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
-(4, 0, 0, 'footer', 'Footer', 'Footer', '', NULL, NULL, 'PUBLISHED', 'standard', '', '', '', '', '1', '', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL);
+(4, 0, 0, 'footer', 'Footer', 'Footer', '', NULL, NULL, 'PUBLISHED', 'standard', '', '', '', '', '1', '', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
+(5, 0, 2, 'news', 'News', 'News', '', NULL, NULL, 'PUBLISHED', 'standard', '', 'News', 'News', 'News page', '1', 'news-list', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
+(6, 0, 2, 'services', 'Services', 'Services', '', NULL, NULL, 'PUBLISHED', 'standard', '', 'Services', 'Services', 'Services page', '1', '', '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL);
 
 -- --------------------------------------------------------
 
