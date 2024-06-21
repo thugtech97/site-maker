@@ -151,7 +151,7 @@
                                     </td>
                                     <td>
                                         {!! $website->status != "" 
-                                            ? '<a href="http://localhost:8081/wsi-sites/created-sites/' . Str::slug($website->website_name) . '/public" target="_blank">' 
+                                            ? '<a href="'.env('APP_URL').'/wsi-sites/created-sites/' . Str::slug($website->website_name) . '/public" target="_blank">' 
                                             . Str::slug($website->website_name) . '/public</a>' 
                                             : '' 
                                         !!}
