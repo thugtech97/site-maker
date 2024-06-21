@@ -213,6 +213,7 @@ class WebsiteController extends Controller {
             //$this->configureEnvFile('APP_URL', 'http://127.0.0.1:' . $website->port, $newProject);
             $this->configureEnvFile('APP_NAME', '"'.$website->website_name.'"', $newProject);
             $this->configureEnvFile('APP_URL', env('APP_URL') . '/wsi-sites/created-sites/' . $slug . '/public', $newProject);
+            $this->configureEnvFile('DB_PORT', env('DB_PORT'), $newProject);
             $this->changeSeederValues('company_name', $companyName, $newProject);
             $this->changeSeederValues('website_name', $companyName, $newProject);
             $this->updatePermissionsSeeder($submodules, $newProject);
