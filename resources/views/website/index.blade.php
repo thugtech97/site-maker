@@ -123,10 +123,11 @@
                             <th style="width: 15%;">Website Name</th>
                             <th class="d-none" style="width: 10%;">Project Type</th>
                             <th class="d-none" style="width: 25%;">Modules</th>
-                            <th style="width: 10%;">Contact Person</th>
-                            <th style="width: 15%;">Status</th>
-                            <th style="width: 25%;">URL</th>
-                            <th style="width: 10%;" class="exclude_export">Action</th>
+                            <th style="width: 15%;">Contact Person</th>
+                            <th style="width: 10%;">Status</th>
+                            <th style="width: 15%;">URL</th>
+                            <th style="width: 15%;">Last Date Modified</th>
+                            <th style="width: 15%;" class="exclude_export">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -148,19 +149,27 @@
                                             <span class="text-success text-uppercase"><i>{{ $website->status }}</i></span>
                                         @endif
                                     </td>
-                                    <td></td>
+                                    <td>
+                                        {!! $website->status != "" 
+                                            ? '<a href="http://localhost:8081/wsi-sites/created-sites/' . Str::slug($website->website_name) . '/public" target="_blank">' 
+                                            . Str::slug($website->website_name) . '/public</a>' 
+                                            : '' 
+                                        !!}
+                                    </td>
+                                    <td>{{ Setting::date_for_listing($website->created_at) }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" href="{{ route('website.show', $website->id) }}" title="View"><i data-feather="eye"></i></a>
-                                            <a class="nav-link" href="{{ route('website.edit', $website->id) }}" title="Edit"><i data-feather="edit"></i></a>
+                                            <a class="nav-link @php echo ($website->status != "") ? 'd-none' : ''; @endphp" href="{{ route('website.edit', $website->id) }}" title="Edit"><i data-feather="edit"></i></a>
                                             <a class="nav-link" href="javascript:void(0)" onclick="delete_website({{$website->id}})" title="Delete"><i data-feather="trash-2"></i></a>
                                             <a class="nav-link @php echo ($website->status != "") ? 'd-none' : ''; @endphp" href="javascript:void(0)" onclick="build_site({{$website->id}})" title="Build site"><i data-feather="layers"></i></a>
+                                            <a class="nav-link @php echo ($website->status != "Built") ? 'd-none' : ''; @endphp" href="javascript:void(0)" onclick="run_site({{$website->id}})" title="Run"><i data-feather="play"></i></a>
                                         </nav>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="7" style="text-align: center;"> <p class="text-danger">No websites created.</p></th>
+                                    <th colspan="8" style="text-align: center;"> <p class="text-danger">No websites created.</p></th>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -245,7 +254,6 @@
         }
 
         function build_site(id){
-
             $('#loader-container').removeClass("hide-loader");
 
             post_form("{{route('website.build')}}",'',id)
@@ -255,6 +263,30 @@
             .catch(error => {
                 $('#loader-container').addClass("hide-loader");
             });
+        }
+
+        function run_site(id){
+            $('#loader-container').removeClass("hide-loader");
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('website.run') }}",
+                data: { website: id },
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                success: function(data){
+                    if(data.success){
+                        console.log('Request successful:', data);
+                        window.open(data.url, '_blank');
+                    }
+                    $('#loader-container').addClass("hide-loader");
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    console.error('Request failed:', textStatus, errorThrown);
+                    $('#loader-container').addClass("hide-loader");
+                }
+            })
         }
 
     </script>

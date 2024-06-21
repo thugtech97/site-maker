@@ -163,8 +163,7 @@ INSERT INTO `banners` (`id`, `album_id`, `title`, `description`, `alt`, `image_p
 (1, 1, 'Best way to save your Money.', 'Interactively seize bricks-and-clicks channels before empowered users. Uniquely maximize bleeding-edge outsourcing.', 'Banner 1', 'http://127.0.0.1:8000/theme/images/banners/image1.jpg', NULL, 'http://127.0.0.1:8000', 1, 1, '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
 (2, 1, 'Beautifully Flexible', 'Looks beautiful &amp; ultra-sharp on Retina Screen Displays. Powerful Layout with Responsive functionality that can be adapted to any screen size.', NULL, 'http://127.0.0.1:8000/theme/images/banners/image2.jpg', NULL, NULL, 2, 1, '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
 (3, 1, 'Great Performance', 'You\'ll be surprised to see the Final Results of your Creation &amp; would crave for more.', NULL, 'http://127.0.0.1:8000/theme/images/banners/image3.jpg', NULL, NULL, 3, 1, '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
-(4, 2, NULL, NULL, NULL, 'http://127.0.0.1:8000/theme/images/banners/sub1.jpg', NULL, NULL, 2, 1, '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL),
-(5, 2, NULL, NULL, NULL, 'http://127.0.0.1:8000/theme/images/banners/sub2.jpg', NULL, NULL, 3, 1, '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL);
+(4, 2, NULL, NULL, NULL, 'http://127.0.0.1:8000/theme/images/banners/banner.png', NULL, NULL, 2, 1, '2024-02-18 12:43:20', '2024-02-18 12:43:20', NULL);
 
 -- --------------------------------------------------------
 

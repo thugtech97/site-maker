@@ -71,7 +71,7 @@
                     <label class="d-block">Modules *</label>
                     <select id="module_id" class="selectpicker mg-b-5" name="module_id[]" multiple data-style="btn btn-outline-light btn-md btn-block tx-left" data-width="100%" required>
                         @forelse($modules as $module)
-                            <option value="{{ $module->id }}" {{ in_array($module->id, [1, 2, 3]) ? 'selected' : '' }}>
+                            <option value="{{ $module->id }}" {{ in_array($module->id, [1, 2, 3, 4, 5, 6, 7, 8]) ? 'selected' : '' }}>
                                 {{strtoupper($module->name)}}
                             </option>
                         @empty
@@ -104,7 +104,7 @@
                 </div>
                 <div class="form-group">
                     <label class="d-block">Themes *</label>
-
+<!--
                     <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="theme1" class="form-check-input theme-selector d-none" value="theme1" data-theme="Theme 1" required>
@@ -121,54 +121,20 @@
                             </label>
                         </div>
                     </div>
-
+!-->
                     <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
                         <div class="form-check form-check-inline">
                             <input type="radio" name="theme" id="law_theme" class="form-check-input theme-selector d-none" value="law_theme" required>
                             <label for="law_theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/law-firm.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="Law Firm" class="theme-image">
+                                <img src="{{ asset('img/themes/law-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="Law Firm" class="theme-image">
                                 <p class="text-center mt-2">Law Firm</p>
                             </label>
                         </div>&nbsp;&nbsp;&nbsp;
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="burger-theme" class="form-check-input theme-selector d-none" value="burger-theme" required>
-                            <label for="burger-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/burger-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="burger_theme" class="theme-image">
-                                <p class="text-center mt-2">Burger Theme</p>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
-                        <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="dark-theme" class="form-check-input theme-selector d-none" value="dark-theme" required>
-                            <label for="dark-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/dark-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
-                                <p class="text-center mt-2">Dark Theme</p>
-                            </label>
-                        </div>&nbsp;&nbsp;&nbsp;
-                        <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="finance-theme" class="form-check-input theme-selector d-none" value="finance-theme" required>
-                            <label for="finance-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/finance-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
-                                <p class="text-center mt-2">Finance Theme</p>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
-                        <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="yoga-theme" class="form-check-input theme-selector d-none" value="yoga-theme" required>
-                            <label for="yoga-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/yoga-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
-                                <p class="text-center mt-2">Yoga Theme</p>
-                            </label>
-                        </div>&nbsp;&nbsp;&nbsp;
-                        <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="seo-demo-theme" class="form-check-input theme-selector d-none" value="seo-demo-theme" required>
-                            <label for="seo-demo-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/burger_theme.jpg') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
-                                <p class="text-center mt-2">SEO Demo Theme</p>
+                            <input type="radio" name="theme" id="drone-theme" class="form-check-input theme-selector d-none" value="drone-theme" required>
+                            <label for="drone-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/drone-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="burger_theme" class="theme-image">
+                                <p class="text-center mt-2">Drone Theme</p>
                             </label>
                         </div>
                     </div>
@@ -182,10 +148,27 @@
                             </label>
                         </div>&nbsp;&nbsp;&nbsp;
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="theme" id="forum-theme" class="form-check-input theme-selector d-none" value="forum-theme" required>
-                            <label for="forum-theme" class="form-check-label">
-                                <img src="{{ asset('img/themes/travel_theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
-                                <p class="text-center mt-2">Forum Theme</p>
+                            <input type="radio" name="theme" id="kindergarten" class="form-check-input theme-selector d-none" value="kindergarten" required>
+                            <label for="kindergarten" class="form-check-label">
+                                <img src="{{ asset('img/themes/kindergarten.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Kindergarten</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="themes-container d-flex flex-column flex-md-row flex-lg-row mt-4">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="gym-theme" class="form-check-input theme-selector d-none" value="gym-theme" required>
+                            <label for="gym-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/gym-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Gym Theme</p>
+                            </label>
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="theme" id="pet-theme" class="form-check-input theme-selector d-none" value="pet-theme" required>
+                            <label for="pet-theme" class="form-check-label">
+                                <img src="{{ asset('img/themes/pet-theme.png') }}" onerror="this.src='{{ asset('img/No_Image_Available.jpg') }}'" alt="" class="theme-image">
+                                <p class="text-center mt-2">Pet Theme</p>
                             </label>
                         </div>
                     </div>

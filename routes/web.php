@@ -25,5 +25,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('settings', SettingsController::class);
     Route::post('/website/delete', [WebsiteController::class, 'delete'])->name('website.delete');
     Route::post('/website/build', [WebsiteController::class, 'build'])->name('website.build');
+    Route::post('/website/run', [WebsiteController::class, 'runSite'])->name('website.run');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

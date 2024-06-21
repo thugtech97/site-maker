@@ -14,7 +14,8 @@ class SettingsSeeder extends Seeder
     public function run()
     {
         Settings::create([
-            'max_site' => 2,
+            'max_site' => 10,
+            'destination_directory' => 'C:/laragon/www/wsi/wsi-sites',
         ]);
     }
 }

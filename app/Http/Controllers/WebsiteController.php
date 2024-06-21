@@ -66,6 +66,7 @@ class WebsiteController extends Controller {
             $logoFile = $request->file('logo');
             $logoFileName = $logoFile->store('logos/'.$website->id, 'public');
             $website->update(['logo' => $logoFileName]);
+            $website->update(['port' => $this->generateUniquePort()]);
             $website->modules()->sync($request->module_id);
 
             return redirect()->route('website.index')->with('success', 'New website has been added.');
@@ -127,6 +128,14 @@ class WebsiteController extends Controller {
     {
         try {
             $website = Website::findOrFail($request->website);
+            $slug = Str::slug($website->website_name);
+            $oldPath    = $this->createdSiteDirectory.'/'.$slug;
+            $newProject = $this->createdSiteDirectory.'/'.$website->vacant_folder;
+            if(File::exists($oldPath)) {
+                File::move($oldPath, $newProject);
+                File::moveDirectory($newProject, $this->destinationDirectory.'/vacant-sites/'.$website->vacant_folder);
+            }
+            DB::statement("DROP DATABASE IF EXISTS `wsi-$slug`");
             $website->delete();
             return redirect()->route('website.index')->with('success', 'Website record has been deleted.');
         } catch (\Exception $e) {
@@ -159,6 +168,7 @@ class WebsiteController extends Controller {
             for($i = 1; $i <= $this->maxSite; $i++){
                 if(File::exists($this->destinationDirectory.'/vacant-sites/wsi-standards'.$i)) {
                     $siteIndex = $i;
+                    $website->update(['vacant_folder' => 'wsi-standards'.$siteIndex]);
                     break;
                 }
             }
@@ -195,10 +205,14 @@ class WebsiteController extends Controller {
             DB::unprepared(file_get_contents($this->destinationDirectory.'/themes/'.$website->theme.'/assets/content.sql'));
 
             DB::statement("UPDATE settings SET website_name = '$companyName', company_name = '$companyName', email = '$email', mobile_no = '$mobile_no' WHERE id = 1");
+            DB::statement("UPDATE banners SET image_path = ? WHERE id = 4", [ env('APP_URL') . '/wsi-sites/created-sites/' . $slug . '/storage/banners/banner.png']);
             DB::statement("UPDATE users SET email = '$email' WHERE id = 1");
             $this->seedPermissions($submodules->toArray());
             
-            $this->configureDatabaseInEnvFile('wsi-'.$slug, $newProject);
+            $this->configureEnvFile('DB_DATABASE', 'wsi-' . $slug, $newProject);
+            //$this->configureEnvFile('APP_URL', 'http://127.0.0.1:' . $website->port, $newProject);
+            $this->configureEnvFile('APP_NAME', '"'.$website->website_name.'"', $newProject);
+            $this->configureEnvFile('APP_URL', env('APP_URL') . '/wsi-sites/created-sites/' . $slug . '/public', $newProject);
             $this->changeSeederValues('company_name', $companyName, $newProject);
             $this->changeSeederValues('website_name', $companyName, $newProject);
             $this->updatePermissionsSeeder($submodules, $newProject);
@@ -208,26 +222,34 @@ class WebsiteController extends Controller {
             $website->update(["status" => "Built"]);
             
             return redirect()->route('website.index')->with('success', 'Site created successfully.');
-
+            
         }catch(\Exception $e){
             return redirect()->route('website.index')->with('error', 'Error: ' . $e->getMessage());
         }
 
     }
 
-    private function configureDatabaseInEnvFile($databaseName, $destinationDirectory)
+    private function configureEnvFile($key, $newValue, $destinationDirectory)
     {
         $envFilePath = $destinationDirectory . '/.env';
         $currentEnvContent = file_get_contents($envFilePath);
-        $newDatabaseConfig = "DB_DATABASE=$databaseName";
+        $newConfig = $key . '=' . $newValue;
 
         $updatedEnvContent = preg_replace(
-            '/(DB_DATABASE=)(.*)/',
-            $newDatabaseConfig,
+            '/^' . preg_quote($key, '/') . '\s*=.*$/m',
+            $newConfig,
             $currentEnvContent
         );
 
         file_put_contents($envFilePath, $updatedEnvContent);
+    }
+
+    private function generateUniquePort() {
+        do {
+            $port = rand(1000, 7999);
+        } while (Website::where('port', $port)->exists());
+    
+        return $port;
     }
 
     private function changeSeederValues($key, $companyName, $destinationDirectory) {
@@ -295,4 +317,30 @@ class WebsiteController extends Controller {
             ('$name', '$moduleName', '', '', '', 1, 0, now(), now(), NULL)");
         }
     }
+
+    public function runSite(Request $request)
+    {
+        $website = Website::findOrFail($request->website);
+        $slug = Str::slug($website->website_name);
+        $siteDirectory = str_replace('/', '\\', $this->createdSiteDirectory) . '\\' . $slug;
+
+        if (!file_exists($siteDirectory)) {
+            \Log::error('Directory does not exist: ' . $siteDirectory);
+            return response()->json(['success' => false, 'message' => 'Directory does not exist']);
+        }
+
+        $command = 'start powershell -NoExit -Command "cd ' . $siteDirectory . '"';
+        exec($command, $output, $returnVar);
+
+        if ($returnVar !== 0) {
+            \Log::error('Command failed with return code: ' . $returnVar);
+            return response()->json(['success' => false]);
+        }
+
+        $url =  'http://127.0.0.1:'.$website->port;
+        return response()->json(['success' => true, 'url' => $url, 'message' => 'Navigated to directory successfully']);
+    }
+
+
+
 }

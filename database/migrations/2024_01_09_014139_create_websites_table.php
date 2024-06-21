@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('website_name')->nullable();
             $table->string('project_type')->nullable();
             $table->string('url')->nullable();
-            $table->enum('theme', ['theme1', 'theme2', 'law_theme', 'burger-theme', 'dark-theme', 'finance-theme', 'seo-demo-theme', 'yoga-theme', 'travel-theme', 'forum-theme'])->nullable();
+            $table->enum('theme', ['theme1', 'theme2', 'law_theme', 'drone-theme', 'travel-theme', 'kindergarten', 'gym-theme', 'pet-theme'])->nullable();
+            $table->string('vacant_folder')->nullable();
+            $table->integer('port')->unique()->nullable();
             $table->string('status')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();

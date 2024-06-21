@@ -89,6 +89,36 @@ class SubmodulesSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'name' => 'albums.upload',
+                'module_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'albums.destroy_many',
+                'module_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'albums.quick_update',
+                'module_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'albums.restore',
+                'module_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'albums.banners',
+                'module_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'name' => 'file-manager.index',
                 'module_id' => 4,
                 'created_at' => now(),
